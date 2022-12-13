@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>練習 09</title>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.css">
   <style>
     body {
       padding: 1rem;
@@ -53,7 +52,11 @@
     <hr>
 
     <!-- TODO: 改用 v-for 列出題目與選項 -->
-    <div class="quest">
+    <div class="quest" v-for="(v, i) in refQuestions">
+      <h3>{{v.quest}}</h3>
+      <label v-for="(k, idx) in v.options"><input type="radio" :value="k.value" v-model="v.selected">{{k.ans}}</label>
+    </div>
+    <!-- <div class="quest">
       <h3>第1題: 如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？</h3>
       <label><input type="radio" value="1">1. 用煙把小豬燻到昏倒</label>
       <label><input type="radio" value="2">2. 從煙囪或其他入口偷偷爬進屋</label>
@@ -76,7 +79,7 @@
       <label><input type="radio" value="4">2. 滑翔翼</label>
       <label><input type="radio" value="2">3. 滑水</label>
       <label><input type="radio" value="1">4. 長途徒步旅行</label>
-    </div>
+    </div> -->
 
     <button @click="getResult">看結果</button>
     <button @click="reset">重置</button>
@@ -119,15 +122,20 @@
             selected: null,
           }
         ];
-        
+
         const refQuestions = ref(questions);
-        
+
         const reset = () => {
-          // TODO: RESET
+          refQuestions.value.forEach(el => {
+            el.selected = null;
+          });
         };
 
+        const score = ref(0);
+
         const getResult = () => {
-          // TODO: 看結果
+          console.log('getResult', refQuestions.value.length);
+          window.alert(refQuestions.value.map((v) => v.selected === null ? 0 : v.selected).reduce((a, b) => a + b));
         };
 
         return {
