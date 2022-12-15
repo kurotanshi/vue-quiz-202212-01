@@ -53,15 +53,15 @@
     <hr>
 
     <!-- TODO: 改用 v-for 列出題目與選項 -->
-    <div class="quest">
-      <h3>第1題: 如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？</h3>
-      <label><input type="radio" value="1">1. 用煙把小豬燻到昏倒</label>
-      <label><input type="radio" value="2">2. 從煙囪或其他入口偷偷爬進屋</label>
+    <div class="quest" v-for="(q, q_idx) in refQuestions" :key="q.quest">
+      <h3>第{{ q_idx+1 }}題: {{ q.quest }}</h3>
+      <label v-for="(o, o_idx) in q.options"><input type="radio" :value="o.value" v-model=q.selected>{{ o_idx+1 }}. {{ o.ans }}</label>
+      <!-- <label><input type="radio" value="2">2. 從煙囪或其他入口偷偷爬進屋</label>
       <label><input type="radio" value="3">3. 用槌子把門破壞闖入屋內</label>
-      <label><input type="radio" value="4">4. 模仿豬媽媽的聲音騙小豬開</label>
+      <label><input type="radio" value="4">4. 模仿豬媽媽的聲音騙小豬開</label> -->
     </div>
 
-    <div class="quest">
+    <!-- <div class="quest">
       <h3>第2題: 剪刀、石頭、布，你第一直覺會出哪一個？</h3>
 
       <label><input type="radio" value="3">1. 剪刀</label>
@@ -76,10 +76,11 @@
       <label><input type="radio" value="4">2. 滑翔翼</label>
       <label><input type="radio" value="2">3. 滑水</label>
       <label><input type="radio" value="1">4. 長途徒步旅行</label>
-    </div>
+    </div> -->
 
     <button @click="getResult">看結果</button>
     <button @click="reset">重置</button>
+    <label>{{ refResult }}</label>
   </div>
 
 
@@ -122,18 +123,31 @@
         
         const refQuestions = ref(questions);
         
+        let result = '';
+        const refResult = ref('');
+        
         const reset = () => {
           // TODO: RESET
+          refQuestions.value.forEach((item) => {
+            item.selected = null;
+          });
+          refResult.value = '';
         };
 
         const getResult = () => {
           // TODO: 看結果
+          let totalValue = 0;
+          questions.forEach((item) => {
+            totalValue += Number(item.selected);
+          });
+          refResult.value = `測驗分數為 ${totalValue}`;
         };
 
         return {
           refQuestions,
           reset,
-          getResult
+          getResult,
+          refResult
         }
       },
     }).mount('#app');
