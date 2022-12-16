@@ -25,7 +25,7 @@
   <div id="app">
     
     <label class="label">
-      站點搜尋：<input type="text">
+      站點搜尋：<input type="text" v-model="stopNameKeyword" />
     </label>
     
     <label class="label">
@@ -78,6 +78,7 @@
       setup() {
         const uBikeStops = ref([]);
         const showOnlyAvailableStops = ref(false);
+        const stopNameKeyword = ref('');
 
         fetch('https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json')
           .then(res => res.text())
@@ -92,18 +93,25 @@
         };
 
         const filteredUBikeStops = computed(() => {
-          if (showOnlyAvailableStops.value) {
-            return uBikeStops.value.filter(stop => stop.sbi > 0);
-          } else {
-            return uBikeStops.value
-          }
+          return uBikeStops.value.filter((stop) => {
+            if (showOnlyAvailableStops.value && stopNameKeyword.value != '') {
+              return stop.sbi > 0 && stop.sna.includes(stopNameKeyword.value);
+            } else if (showOnlyAvailableStops.value) {
+              return stop.sbi > 0;
+            } else if (stopNameKeyword.value != '') {
+              return stop.sna.includes(stopNameKeyword.value);
+            } else {
+              return true;
+            }
+          });
         });
 
         return {
           uBikeStops,
           timeFormat,
           showOnlyAvailableStops,
-          filteredUBikeStops
+          filteredUBikeStops,
+          stopNameKeyword
         }
       },
 
