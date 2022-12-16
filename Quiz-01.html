@@ -56,12 +56,14 @@
       <h3>第{{ question_idx + 1 }}題: {{ question.quest }}</h3>
 
       <label v-for="(option, option_idx) in question.options">
-        <input type="radio" :value="option.value">{{ option_idx + 1 }}. {{ option.ans }}
+        <input type="radio" :value="option.value" v-model="selectedOptions[question_idx]" />{{ option_idx + 1 }}. {{ option.ans }}
       </label>
     </div>
 
     <button @click="getResult">看結果</button>
     <button @click="reset">重置</button>
+
+    <h1>{{ result }}</h1>
   </div>
 
 
@@ -70,6 +72,9 @@
 
     const app = createApp({
       setup() {
+        const selectedOptions = ref([]);
+        const result = ref(0)
+
         const questions = [
           {
             quest: '如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？',
@@ -109,13 +114,19 @@
         };
 
         const getResult = () => {
-          // TODO: 看結果
+          result.value = 0
+
+          questions.forEach((question, idx) => {
+            result.value += selectedOptions.value[idx] || 0
+          });
         };
 
         return {
           refQuestions,
           reset,
-          getResult
+          getResult,
+          selectedOptions,
+          result
         }
       },
     }).mount('#app');
