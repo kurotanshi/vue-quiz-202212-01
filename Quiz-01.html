@@ -53,30 +53,13 @@
     <hr>
 
     <!-- TODO: 改用 v-for 列出題目與選項 -->
-    <div class="quest">
-      <h3>第1題: 如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？</h3>
-      <label><input type="radio" value="1">1. 用煙把小豬燻到昏倒</label>
-      <label><input type="radio" value="2">2. 從煙囪或其他入口偷偷爬進屋</label>
-      <label><input type="radio" value="3">3. 用槌子把門破壞闖入屋內</label>
-      <label><input type="radio" value="4">4. 模仿豬媽媽的聲音騙小豬開</label>
+    <div class="quest" v-for="(q,index) in refQuestions">
+      <h3>第{{ index+1 }}題:{{ q.quest }}</h3>
+      <label v-for="(qq,index) in q.options">
+      <input type="radio" v-bind:value="qq.value" v-model="q.selected">{{ index + 1}}.{{ qq.ans }}</label>
+
     </div>
 
-    <div class="quest">
-      <h3>第2題: 剪刀、石頭、布，你第一直覺會出哪一個？</h3>
-
-      <label><input type="radio" value="3">1. 剪刀</label>
-      <label><input type="radio" value="2">2. 石頭</label>
-      <label><input type="radio" value="1">3. 布</label>
-    </div>
-
-    <div class="quest">
-      <h3>第3題: 下列四項運動項目中，假設你要開始嘗試的話，你最想要做哪一項？</h3>
-
-      <label><input type="radio" value="3">1. 潛水</label>
-      <label><input type="radio" value="4">2. 滑翔翼</label>
-      <label><input type="radio" value="2">3. 滑水</label>
-      <label><input type="radio" value="1">4. 長途徒步旅行</label>
-    </div>
 
     <button @click="getResult">看結果</button>
     <button @click="reset">重置</button>
@@ -124,16 +107,24 @@
         
         const reset = () => {
           // TODO: RESET
-        };
+          
+          refQuestions.value.forEach(ele => {
+            ele.selected =null;
+          });
+        };      
 
         const getResult = () => {
           // TODO: 看結果
+          let total = refQuestions.value.map((q) => q.selected === null ? 0 : q.selected).reduce((num1,num2)=>num1+num2);
+          window.alert("總數:"+ total);
         };
+        
+        
 
         return {
           refQuestions,
           reset,
-          getResult
+          getResult,
         }
       },
     }).mount('#app');
