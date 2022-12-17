@@ -107,7 +107,7 @@
         const refQuestions = ref(questions);
         
         const reset = () => {
-          refQuestions.value.forEach( q=> q.selected=unll);
+          refQuestions.value.forEach( q=> q.selected=null);
         };
 
         const getResult = () => {
