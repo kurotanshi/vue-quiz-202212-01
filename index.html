@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>練習 09</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.css">
+  <style>
+    body {
+      padding: 1rem;
+      font-size: 1.33rem;
+    }
+
+    button {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    label>input {
+      margin-right: 0.5rem;
+    }
+
+    .quest {
+      margin-bottom: 1em;
+      padding-bottom: 1em;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+
+  <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!--
+      練習 09： 一個簡單的心理測驗遊戲
+      1. 改寫網頁，透過 v-for 將題目與選項依序列出
+      2. 按下「看結果」按鈕計算總分
+      3. 按下「重置」按鈕重置選項
+    -->
+
+    <h1>練習 09: 簡單的心理測驗遊戲</h1>
+    <hr>
+
+    <!-- TODO: 改用 v-for 列出題目與選項 -->
+    <div class="quest" v-for="(v, i) in refQuestions">
+      <h3>{{v.quest}}</h3>
+      <label v-for="(k, idx) in v.options"><input type="radio" :value="k.value" v-model="v.selected">{{k.ans}}</label>
+    </div>
+    <!-- <div class="quest">
+      <h3>第1題: 如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？</h3>
+      <label><input type="radio" value="1">1. 用煙把小豬燻到昏倒</label>
+      <label><input type="radio" value="2">2. 從煙囪或其他入口偷偷爬進屋</label>
+      <label><input type="radio" value="3">3. 用槌子把門破壞闖入屋內</label>
+      <label><input type="radio" value="4">4. 模仿豬媽媽的聲音騙小豬開</label>
+    </div>
+
+    <div class="quest">
+      <h3>第2題: 剪刀、石頭、布，你第一直覺會出哪一個？</h3>
+
+      <label><input type="radio" value="3">1. 剪刀</label>
+      <label><input type="radio" value="2">2. 石頭</label>
+      <label><input type="radio" value="1">3. 布</label>
+    </div>
+
+    <div class="quest">
+      <h3>第3題: 下列四項運動項目中，假設你要開始嘗試的話，你最想要做哪一項？</h3>
+
+      <label><input type="radio" value="3">1. 潛水</label>
+      <label><input type="radio" value="4">2. 滑翔翼</label>
+      <label><input type="radio" value="2">3. 滑水</label>
+      <label><input type="radio" value="1">4. 長途徒步旅行</label>
+    </div> -->
+
+    <button @click="getResult">看結果</button>
+    <button @click="reset">重置</button>
+  </div>
+
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+
+    const app = createApp({
+      setup() {
+        const questions = [
+          {
+            quest: '如果你是童話故事中，想吃掉三隻小豬的大野狼，你認為使用哪一種方法可以容易吃掉他們？',
+            options: [
+              { ans: '用煙把小豬燻到昏倒', value: 1 },
+              { ans: '從煙囪或其他入口偷偷爬進屋', value: 2 },
+              { ans: '用槌子把門破壞闖入屋內', value: 3 },
+              { ans: '模仿豬媽媽的聲音騙小豬開門', value: 4 },
+            ],
+            selected: null,
+          },
+          {
+            quest: '剪刀、石頭、布，你第一直覺會出哪一個？',
+            options: [
+              { ans: '剪刀', value: 3 },
+              { ans: '石頭', value: 2 },
+              { ans: '布', value: 1 },
+            ],
+            selected: null
+          },
+          {
+            quest: '下列四項運動項目中，假設你要開始嘗試的話，你最想要做哪一項？',
+            options: [
+              { ans: '潛水', value: 3 },
+              { ans: '滑翔翼', value: 4 },
+              { ans: '滑水', value: 2 },
+              { ans: '長途徒步旅行', value: 1 },
+            ],
+            selected: null,
+          }
+        ];
+
+        const refQuestions = ref(questions);
+
+        const reset = () => {
+          refQuestions.value.forEach(el => {
+            el.selected = null;
+          });
+        };
+
+        const score = ref(0);
+
+        const getResult = () => {
+          console.log('getResult', refQuestions.value.length);
+          window.alert(refQuestions.value.map((v) => v.selected === null ? 0 : v.selected).reduce((a, b) => a + b));
+        };
+
+        return {
+          refQuestions,
+          reset,
+          getResult
+        }
+      },
+    }).mount('#app');
+  </script>
+</body>
+
+</html>
